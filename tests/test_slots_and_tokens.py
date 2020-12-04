@@ -6,7 +6,7 @@ import unittest
 
 import pkcs11
 
-from . import LIB, TOKEN, Only, Not
+from . import LIB, TOKEN, Only, Not, ALTERNATIVE_LIB
 
 
 class SlotsAndTokensTests(unittest.TestCase):
@@ -19,6 +19,12 @@ class SlotsAndTokensTests(unittest.TestCase):
         self.assertIsNotNone(pkcs11.lib(LIB))
         with self.assertRaises(pkcs11.AlreadyInitialized):
             pkcs11.lib('somethingelse.so')
+
+    @Only.alternativelib
+    def test_initialise_and_release_different_libs(self):
+        self.assertIsNotNone(pkcs11.lib(LIB))
+        pkcs11.release()
+        self.assertIsNotNone(pkcs11.lib(ALTERNATIVE_LIB))
 
     @Only.softhsm2
     def test_get_slots(self):

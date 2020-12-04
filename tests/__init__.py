@@ -43,6 +43,10 @@ OPENSSL = shutil.which('openssl', path=os.environ.get('OPENSSL_PATH'))
 if OPENSSL is None:
     warn("Path to OpenSSL not found. Please adjust `PATH' or define `OPENSSL_PATH'")
 
+ALTERNATIVE_LIB = os.environ.get('PKCS11_MODULE_ALTERNATIVE')
+if ALTERNATIVE_LIB is None:
+    warn("`PKCS11_MODULE_ALTERNATIVE' env variable is unset.")
+
 
 class TestCase(unittest.TestCase):
     """Base test case, optionally creates a token and a session."""
@@ -131,6 +135,7 @@ class Avail:
     # openssl is searched across the exec path. Optionally, OPENSSL_PATH env variable can be defined
     # in case there is no direct path to it (i.e. PATH does not point to it)
     openssl = OPENSSL is not None
+    alternativelib = ALTERNATIVE_LIB is not None
 
 class Only:
     """
@@ -138,6 +143,7 @@ class Only:
     """
     softhsm2 = unittest.skipUnless(Is.softhsm2, "SoftHSMv2 only")
     openssl = unittest.skipUnless(Avail.openssl, "openssl not found in the path")
+    alternativelib = unittest.skipUnless(Avail.alternativelib, "Alternative lib is not provided")
 
 class Not:
     """

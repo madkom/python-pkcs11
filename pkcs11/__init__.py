@@ -33,3 +33,12 @@ def lib(so):
     _so = so
 
     return _lib
+
+
+def release():
+
+    global _lib
+    global _so
+
+    _lib = None
+    _so = None
